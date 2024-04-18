@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "github.com/dhiemaz/RoleService";
+
+package role;
+import "validator.proto";
+import "google/protobuf/empty.proto";
+import "pagination.proto";
+
+message Role{
+  int32 Id = 1;
+  string Name = 2;
+}
+
+message RoleResponse {
+  pagination.PaginationMeta meta = 1;
+  repeated Role role = 2;
+}
+
+service RoleService {
+  rpc SearchRoleData() returns (RoleResponse) {}
+}
+

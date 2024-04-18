@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "github.com/dhiemaz/OfficeService";
+
+package office;
+import "validator.proto";
+import "google/protobuf/empty.proto";
+import "pagination.proto";
+
+message Office {
+  int32 Id = 1;
+  string Name = 2;
+}
+
+message OfficeResponse {
+  pagination.PaginationMeta meta = 1;
+  repeated Office office = 2;
+}
+
+service OfficeService {
+  rpc SearchOfficeData() returns (OfficeResponse) {}
+}
+

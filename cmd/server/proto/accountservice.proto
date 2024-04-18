@@ -3,47 +3,35 @@ syntax = "proto3";
 option go_package = "github.com/dhiemaz/EmployeeService";
 
 package account;
+import "validator.proto";
+import "google/protobuf/empty.proto";
+import "pagination.proto";
+import "roleservice.proto";
+import "officeservice.proto";
+import "accessservice.proto";
+
+message AccountRequest {
+  string username = 1 [(validator.field) = {string_not_empty : true}];
+  string password = 2 [(validator.field) = {string_not_empty : true}];
+  string fullname = 3 [(validator.field) = {string_not_empty : true}];
+  string address = 4;
+  string province = 5;
+  repeated role.Role role = 6;
+  repeated office.Office office = 7;
+  repeated access.Access access = 8;
+}
+
+message AccountResponse {
+  string code = 1;
+  string message = 2;
+}
 
 service EmployeeService {
-  rpc AccountRegistration() returns () {}
+  rpc AccountRegistration(AccountRequest) returns (AccountResponse) {}
   rpc AccountUpdate() returns () {}
   rpc AccountSearch() returns () {}
   rpc AccountAddRole() returns () {}
   rpc AccountUpdateRole() returns () {}
   rpc AccountAddOffice() returns () {}
   rpc AccountRemoveOffice() returns () {}
-}
-
-service RoleService {
-  rpc SearchRoleData() returns () {}
-}
-
-service OfficeService {
-  rpc SearchOfficeData() returns () {}
-}
-
-message Account {
-  string Name = 1;
-  string Password = 2;
-  string Fullname = 3;
-  string Address = 4;
-  string Province = 5;
-  repeated Role Role = 6;
-  repeated Office Office = 7;
-  repeated Access Access = 8;
-}
-
-message Office {
-  int32 Id = 1;
-  string Name = 2;
-}
-
-message Role{
-  int32 Id = 1;
-  string Name = 2;
-}
-
-message Access{
-  int32 Id = 1;
-  string Name = 2;
 }

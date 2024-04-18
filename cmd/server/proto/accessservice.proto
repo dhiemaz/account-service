@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "github.com/dhiemaz/AccessService";
+
+package access;
+import "validator.proto";
+import "google/protobuf/empty.proto";
+import "pagination.proto";
+
+message Access{
+  int32 Id = 1;
+  string Name = 2;
+}
+
+message AccessResponse {
+  pagination.PaginationMeta meta = 1;
+  repeated Access access = 2;
+}
+
+service AccessService {
+  rpc SearchAccessData() returns (AccessResponse) {}
+}

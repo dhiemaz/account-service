@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option go_package = "github.com/dhiemaz/RoleService";
+
+package pagination;
+
+message PaginationMeta {
+  int32 total_results = 1;
+  int32 total_pages = 2;
+  int32 page = 3;
+  int32 per_page = 4;
+}
