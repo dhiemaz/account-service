@@ -1,0 +1,11 @@
+syntax = "proto3;
+
+    option go_package = "github.com/dhiemaz/AccountService";
+
+package account;
+
+service EmployeeService {
+  rpc Registration() returns () {}
+}
+
+message
