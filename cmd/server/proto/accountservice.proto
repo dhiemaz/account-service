@@ -1,11 +1,49 @@
-syntax = "proto3;
+syntax = "proto3";
 
-    option go_package = "github.com/dhiemaz/AccountService";
+option go_package = "github.com/dhiemaz/EmployeeService";
 
 package account;
 
 service EmployeeService {
-  rpc Registration() returns () {}
+  rpc AccountRegistration() returns () {}
+  rpc AccountUpdate() returns () {}
+  rpc AccountSearch() returns () {}
+  rpc AccountAddRole() returns () {}
+  rpc AccountUpdateRole() returns () {}
+  rpc AccountAddOffice() returns () {}
+  rpc AccountRemoveOffice() returns () {}
 }
 
-message
+service RoleService {
+  rpc SearchRoleData() returns () {}
+}
+
+service OfficeService {
+  rpc SearchOfficeData() returns () {}
+}
+
+message Account {
+  string Name = 1;
+  string Password = 2;
+  string Fullname = 3;
+  string Address = 4;
+  string Province = 5;
+  repeated Role Role = 6;
+  repeated Office Office = 7;
+  repeated Access Access = 8;
+}
+
+message Office {
+  int32 Id = 1;
+  string Name = 2;
+}
+
+message Role{
+  int32 Id = 1;
+  string Name = 2;
+}
+
+message Access{
+  int32 Id = 1;
+  string Name = 2;
+}
