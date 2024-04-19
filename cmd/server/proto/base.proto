@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = "base";
+
+package base;
+
+message BaseResponse {
+  string code = 1;
+  string message = 2;
+}

@@ -17,6 +17,10 @@ message OfficeResponse {
   repeated Office office = 2;
 }
 
+message PaginationRequest {
+  pagination.PaginationRequest pagination = 1;
+}
+
 service OfficeService {
   rpc SearchOfficeData() returns (OfficeResponse) {}
 }

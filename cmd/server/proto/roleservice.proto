@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/dhiemaz/RoleService";
+option go_package = "role";
 
 package role;
 import "validator.proto";
@@ -15,6 +15,10 @@ message Role{
 message RoleResponse {
   pagination.PaginationMeta meta = 1;
   repeated Role role = 2;
+}
+
+message RoleRequest {
+  pagination.PaginationRequest pagination = 1;
 }
 
 service RoleService {

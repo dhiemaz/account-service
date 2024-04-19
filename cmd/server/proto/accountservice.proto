@@ -1,37 +1,122 @@
 syntax = "proto3";
 
-option go_package = "github.com/dhiemaz/EmployeeService";
+option go_package = "github.com/dhiemaz/AccountService";
 
 package account;
 import "validator.proto";
 import "google/protobuf/empty.proto";
+import "base.proto";
+import "user.proto";
 import "pagination.proto";
 import "roleservice.proto";
 import "officeservice.proto";
 import "accessservice.proto";
 
-message AccountRequest {
+// ---------------------------- Account Service Base Data -------------------------------------- //
+
+message RegistrationData {
+  string username = 1;
+  user.User user_data = 2;
+  repeated role.Role role = 3;
+  repeated access.Access access = 4;
+}
+
+message UpdateData{
+  string username = 1 [(validator.field) = {string_not_empty : true}];
+  user.User user_data = 2;
+}
+
+message AccountData {
+  string username = 1;
+  user.User user_data = 2;
+  repeated role.Role role = 3;
+  repeated access.Access access = 4;
+}
+
+// --------------------------- Account Registration Request and Response -------------------- //
+message AccountRegistrationRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
   string password = 2 [(validator.field) = {string_not_empty : true}];
-  string fullname = 3 [(validator.field) = {string_not_empty : true}];
-  string address = 4;
-  string province = 5;
+  user.User user_data = 3;
   repeated role.Role role = 6;
   repeated office.Office office = 7;
   repeated access.Access access = 8;
 }
 
-message AccountResponse {
-  string code = 1;
-  string message = 2;
+message AccountRegistrationResponse {
+  base.BaseResponse status = 1;
+  RegistrationData data = 2;
 }
 
+// ------------------------------ AccountUpdate Request and Response ----------------------- //
+message AccountUpdateRequest {
+  string username = 1 [(validator.field) = {string_not_empty : true}];
+  user.User user_data = 2;
+}
+
+message AccountUpdateResponse {
+  base.BaseResponse status = 1;
+  user.User user_data = 2;
+}
+
+// --------------------------------- AccountSearch Request and Response ---------------------- //
+message AccountSearchRequest {
+  pagination.PaginationRequest pagination = 1;
+}
+
+message AccountSearchResponse {
+  base.BaseResponse status = 1;
+  pagination.PaginationMeta meta = 2;
+  RegistrationData data = 3;
+}
+
+// ----------------------------- AccountRemoveRole Request and Response ---------------------- //
+message AccountRemoveRoleRequest {
+  string username = 1 [(validator.field) = {string_not_empty : true}];
+  repeated role.Role role = 2;
+}
+
+message AccountRemoveRoleResponse {
+  base.BaseResponse status = 1;
+}
+
+// -------------------------------- AccountAddRole Request and Response --------------------- //
+message AccountAddRoleRequest {
+  string username = 1 [(validator.field) = {string_not_empty : true}];
+  repeated role.Role role = 2;
+}
+
+message AccountAddRoleResponse {
+  base.BaseResponse status = 1;
+}
+
+// -------------------------------- AccountAddOffice Request and Response ------------------- //
+message AccountAddOfficeRequest {
+  string username = 1 [(validator.field) = {string_not_empty : true}];
+  repeated office.Office office = 2;
+}
+
+message AccountAddOfficeResponse {
+  base.BaseResponse status = 1;
+}
+
+// -------------------------------- AccountRemoveOffice Request and Response ---------------- //
+message AccountRemoveOfficeRequest {
+  string username = 1 [(validator.field) = {string_not_empty : true}];
+  repeated office.Office office = 2;
+}
+
+message AccountRemoveOfficeResponse {
+  base.BaseResponse status = 1;
+}
+
+
 service EmployeeService {
-  rpc AccountRegistration(AccountRequest) returns (AccountResponse) {}
-  rpc AccountUpdate() returns () {}
-  rpc AccountSearch() returns () {}
-  rpc AccountAddRole() returns () {}
-  rpc AccountUpdateRole() returns () {}
-  rpc AccountAddOffice() returns () {}
-  rpc AccountRemoveOffice() returns () {}
+  rpc AccountRegistration(AccountRegistrationRequest) returns (AccountRegistrationResponse) {}
+  rpc AccountUpdate(AccountUpdateRequest) returns (AccountUpdateResponse) {}
+  rpc AccountSearch(AccountSearchRequest) returns (AccountSearchResponse) {}
+  rpc AccountAddRole(AccountAddRoleRequest) returns (AccountAddRoleResponse) {}
+  rpc AccountRemoveRole(AccountRemoveRoleRequest) returns (AccountRemoveRoleResponse) {}
+  rpc AccountAddOffice(AccountAddOfficeRequest) returns (AccountAddOfficeResponse) {}
+  rpc AccountRemoveOffice(AccountRemoveOfficeRequest) returns (AccountRemoveOfficeResponse) {}
 }

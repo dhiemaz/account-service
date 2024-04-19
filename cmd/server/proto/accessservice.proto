@@ -17,6 +17,10 @@ message AccessResponse {
   repeated Access access = 2;
 }
 
+message AccessRequest {
+  pagination.PaginationRequest pagination = 1;
+}
+
 service AccessService {
   rpc SearchAccessData() returns (AccessResponse) {}
 }
