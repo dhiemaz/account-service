@@ -22,6 +22,6 @@ message OfficeInput {
 }
 
 service OfficeService {
-  rpc SearchOfficeData(OfficeInput) returns (OfficeOutput) {}
+  rpc SearchOfficeData(OfficeInput) returns (OfficeOutput) {};
 }
 

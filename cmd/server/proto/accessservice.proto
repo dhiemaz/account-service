@@ -22,5 +22,5 @@ message AccessInput {
 }
 
 service AccessService {
-  rpc SearchAccessData(AccessInput) returns (AccessOuput) {}
+  rpc SearchAccessData(AccessInput) returns (AccessOuput) {};
 }

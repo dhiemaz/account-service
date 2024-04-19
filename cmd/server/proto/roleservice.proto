@@ -22,6 +22,6 @@ message RoleRequest {
 }
 
 service RoleService {
-  rpc SearchRoleData(RoleRequest) returns (RoleResponse) {}
+  rpc SearchRoleData(RoleRequest) returns (RoleResponse) {};
 }
 

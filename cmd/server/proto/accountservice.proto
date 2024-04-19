@@ -112,11 +112,11 @@ message AccountRemoveOfficeResponse {
 
 
 service EmployeeService {
-  rpc AccountRegistration(AccountRegistrationRequest) returns (AccountRegistrationResponse) {}
-  rpc AccountUpdate(AccountUpdateRequest) returns (AccountUpdateResponse) {}
-  rpc AccountSearch(AccountSearchRequest) returns (AccountSearchResponse) {}
-  rpc AccountAddRole(AccountAddRoleRequest) returns (AccountAddRoleResponse) {}
-  rpc AccountRemoveRole(AccountRemoveRoleRequest) returns (AccountRemoveRoleResponse) {}
-  rpc AccountAddOffice(AccountAddOfficeRequest) returns (AccountAddOfficeResponse) {}
-  rpc AccountRemoveOffice(AccountRemoveOfficeRequest) returns (AccountRemoveOfficeResponse) {}
+  rpc AccountRegistration(AccountRegistrationRequest) returns (AccountRegistrationResponse) {};
+  rpc AccountUpdate(AccountUpdateRequest) returns (AccountUpdateResponse) {};
+  rpc AccountSearch(AccountSearchRequest) returns (AccountSearchResponse) {};
+  rpc AccountAddRole(AccountAddRoleRequest) returns (AccountAddRoleResponse) {};
+  rpc AccountRemoveRole(AccountRemoveRoleRequest) returns (AccountRemoveRoleResponse) {};
+  rpc AccountAddOffice(AccountAddOfficeRequest) returns (AccountAddOfficeResponse) {};
+  rpc AccountRemoveOffice(AccountRemoveOfficeRequest) returns (AccountRemoveOfficeResponse) {};
 }
