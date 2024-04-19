@@ -1,11 +1,12 @@
 syntax = "proto3";
 
-option go_package = "user";
+package User;
 
-package user;
+option go_package = ".;account_svc";
+
 import "validator.proto";
 
-message User {
+message Data {
   string fullname = 1 [(validator.field) = {string_not_empty : true}];
   string address = 2;
   string province = 3;

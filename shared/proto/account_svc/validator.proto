@@ -11,7 +11,7 @@ package validator;
 
 import "google/protobuf/descriptor.proto";
 
-option go_package = "protocol";
+option go_package = ".;account_svc";
 
 // TODO(mwitkow): Email protobuf-global-extension-registry@google.com to get an extension ID.
 

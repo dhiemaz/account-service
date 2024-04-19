@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package access_svc;
+
+option go_package = ".;access_svc";
+
+import "pagination.proto";
+import "access.proto";
+
+message AccessOutput {
+  pagination.PaginationMeta meta = 1;
+  repeated Access.Data data = 2;
+}
+
+message AccessInput {
+  pagination.PaginationRequest pagination = 1;
+}
+
+service AccessService {
+  rpc SearchAccessData(AccessInput) returns (AccessOutput) {};
+}

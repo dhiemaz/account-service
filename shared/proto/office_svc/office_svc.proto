@@ -1,20 +1,14 @@
 syntax = "proto3";
 
-option go_package = "github.com/dhiemaz/OfficeService";
+option go_package = ".;office_svc";
 
-package office;
-import "validator.proto";
-import "google/protobuf/empty.proto";
+package office_svc;
 import "pagination.proto";
-
-message Office {
-  int32 Id = 1;
-  string Name = 2;
-}
+import "office.proto";
 
 message OfficeOutput {
   pagination.PaginationMeta meta = 1;
-  repeated Office office = 2;
+  repeated Office.Data data = 2;
 }
 
 message OfficeInput {

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pagination;
+option go_package = ".;access_svc";
+
+message PaginationMeta {
+  int32 total_results = 1;
+  int32 total_pages = 2;
+  int32 page = 3;
+  int32 per_page = 4;
+}
+
+message PaginationRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}

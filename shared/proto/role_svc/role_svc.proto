@@ -1,20 +1,14 @@
 syntax = "proto3";
 
-option go_package = "role";
+option go_package = ".;role_svc";
 
-package role;
-import "validator.proto";
-import "google/protobuf/empty.proto";
+package role_svc;
 import "pagination.proto";
-
-message Role{
-  int32 Id = 1;
-  string Name = 2;
-}
+import "role.proto";
 
 message RoleResponse {
   pagination.PaginationMeta meta = 1;
-  repeated Role role = 2;
+  repeated Role.Data data = 2;
 }
 
 message RoleRequest {

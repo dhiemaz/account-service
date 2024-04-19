@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package Role;
+option go_package = ".;account_svc";
+
+message Data{
+  int32 Id = 1;
+  string Name = 2;
+}

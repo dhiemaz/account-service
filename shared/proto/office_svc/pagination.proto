@@ -1,8 +1,7 @@
 syntax = "proto3";
 
-option go_package = "pagination";
-
 package pagination;
+option go_package = ".;office_svc";
 
 message PaginationMeta {
   int32 total_results = 1;

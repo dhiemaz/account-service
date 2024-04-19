@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option go_package = ".;office_svc";
+
+package Office;
+
+message Data {
+  int32 Id = 1;
+  string Name = 2;
+}

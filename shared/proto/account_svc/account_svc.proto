@@ -1,46 +1,46 @@
 syntax = "proto3";
 
-option go_package = "github.com/dhiemaz/AccountService";
+option go_package = ".;account_svc";
 
-package account;
+package account_svc;
+
 import "validator.proto";
-import "google/protobuf/empty.proto";
 import "base.proto";
 import "user.proto";
 import "pagination.proto";
-import "roleservice.proto";
-import "officeservice.proto";
-import "accessservice.proto";
+import "role.proto";
+import "office.proto";
+import "access.proto";
 
 // ---------------------------- Account Service Base Data -------------------------------------- //
 
 message RegistrationData {
   string username = 1;
-  user.User user_data = 2;
-  repeated role.Role role = 3;
-  repeated access.Access access = 4;
+  User.Data user_data = 2;
+  repeated Role.Data role = 3;
+  repeated Access.Data access = 4;
 }
 
 message UpdateData{
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  user.User user_data = 2;
+  User.Data data = 2;
 }
 
 message AccountData {
   string username = 1;
-  user.User user_data = 2;
-  repeated role.Role role = 3;
-  repeated access.Access access = 4;
+  User.Data data = 2;
+  repeated Role.Data role = 3;
+  repeated Access.Data access = 4;
 }
 
 // --------------------------- Account Registration Request and Response -------------------- //
 message AccountRegistrationRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
   string password = 2 [(validator.field) = {string_not_empty : true}];
-  user.User user_data = 3;
-  repeated role.Role role = 6;
-  repeated office.Office office = 7;
-  repeated access.Access access = 8;
+  User.Data data = 3;
+  repeated Role.Data role = 4;
+  repeated Access.Data access = 5;
+  repeated Office.Data office = 6;
 }
 
 message AccountRegistrationResponse {
@@ -51,12 +51,12 @@ message AccountRegistrationResponse {
 // ------------------------------ AccountUpdate Request and Response ----------------------- //
 message AccountUpdateRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  user.User user_data = 2;
+  User.Data data = 2;
 }
 
 message AccountUpdateResponse {
   base.BaseResponse status = 1;
-  user.User user_data = 2;
+  User.Data data = 2;
 }
 
 // --------------------------------- AccountSearch Request and Response ---------------------- //
@@ -73,7 +73,7 @@ message AccountSearchResponse {
 // ----------------------------- AccountRemoveRole Request and Response ---------------------- //
 message AccountRemoveRoleRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated role.Role role = 2;
+  repeated Role.Data data = 2;
 }
 
 message AccountRemoveRoleResponse {
@@ -83,7 +83,7 @@ message AccountRemoveRoleResponse {
 // -------------------------------- AccountAddRole Request and Response --------------------- //
 message AccountAddRoleRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated role.Role role = 2;
+  repeated Role.Data data = 2;
 }
 
 message AccountAddRoleResponse {
@@ -93,7 +93,7 @@ message AccountAddRoleResponse {
 // -------------------------------- AccountAddOffice Request and Response ------------------- //
 message AccountAddOfficeRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated office.Office office = 2;
+  repeated Office.Data data = 2;
 }
 
 message AccountAddOfficeResponse {
@@ -103,13 +103,12 @@ message AccountAddOfficeResponse {
 // -------------------------------- AccountRemoveOffice Request and Response ---------------- //
 message AccountRemoveOfficeRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated office.Office office = 2;
+  repeated Office.Data data = 2;
 }
 
 message AccountRemoveOfficeResponse {
   base.BaseResponse status = 1;
 }
-
 
 service EmployeeService {
   rpc AccountRegistration(AccountRegistrationRequest) returns (AccountRegistrationResponse) {};
