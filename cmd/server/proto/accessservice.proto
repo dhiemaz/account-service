@@ -12,15 +12,15 @@ message Access{
   string Name = 2;
 }
 
-message AccessResponse {
+message AccessOuput {
   pagination.PaginationMeta meta = 1;
   repeated Access access = 2;
 }
 
-message AccessRequest {
+message AccessInput {
   pagination.PaginationRequest pagination = 1;
 }
 
 service AccessService {
-  rpc SearchAccessData() returns (AccessResponse) {}
+  rpc SearchAccessData(AccessInput) returns (AccessOuput) {}
 }

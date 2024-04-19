@@ -12,16 +12,16 @@ message Office {
   string Name = 2;
 }
 
-message OfficeResponse {
+message OfficeOutput {
   pagination.PaginationMeta meta = 1;
   repeated Office office = 2;
 }
 
-message PaginationRequest {
+message OfficeInput {
   pagination.PaginationRequest pagination = 1;
 }
 
 service OfficeService {
-  rpc SearchOfficeData() returns (OfficeResponse) {}
+  rpc SearchOfficeData(OfficeInput) returns (OfficeOutput) {}
 }
 
