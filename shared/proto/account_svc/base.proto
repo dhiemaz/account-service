@@ -1,10 +1,17 @@
 syntax = "proto3";
 
-package base;
+package account_svc;
 
 option go_package = ".;account_svc";
 
-message BaseResponse {
+message data{
+  int32 Id = 1;
+  string Name = 2;
+}
+
+message response {
   string code = 1;
   string message = 2;
 }
+
+

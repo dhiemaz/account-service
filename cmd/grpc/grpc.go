@@ -35,10 +35,9 @@ func RunServer() {
 	}
 
 	opts = append(opts, grpc.UnaryInterceptor(serverInterceptor))
+	server := grpc.NewServer(opts...)
 
-	// ctn := container.NewContainer()
-	grpcServer := grpc.NewServer(opts...)
-
+	// ctn := di.NewContainer()
 	//Apply(grpcServer, ctn)
 
 	svcHost := cfg.Server.Host
@@ -50,12 +49,12 @@ func RunServer() {
 			log.Fatalf("failed listen, err : %v", err)
 		}
 
-		if err := grpcServer.Serve(lis); err != nil {
+		if err := server.Serve(lis); err != nil {
 			log.Fatalf("failed start gRPC server, err : %v", err)
 		}
 	}()
 
-	fmt.Printf("BL gRPC server is running at %s:%d\n", svcHost, svcPort)
+	fmt.Printf("gRPC server is running at %s:%d\n", svcHost, svcPort)
 
 	c := make(chan os.Signal)
 	signal.Notify(c, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
@@ -69,7 +68,7 @@ func serverInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySer
 	//logger.WriteLog(logger.Info, req, m, "request", "", info.FullMethod, logUUID.String(), codes.OK)
 
 	//if err != nil {
-	//	return container.MetaData{}, status.Errorf(codes.InvalidArgument, err.Error())
+	//	return di.MetaData{}, status.Errorf(codes.InvalidArgument, err.Error())
 	//}
 
 	//log.Println("Metadata ", m)
@@ -95,3 +94,9 @@ func serverInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySer
 	}
 	return res, err
 }
+
+/*
+func Apply(server *grpc.Server, ctn *con) {
+
+}
+*/

@@ -3,19 +3,34 @@ syntax = "proto3";
 option go_package = ".;office_svc";
 
 package office_svc;
-import "pagination.proto";
-import "office.proto";
+
+message pagination_meta {
+  int32 total_results = 1;
+  int32 total_pages = 2;
+  int32 page = 3;
+  int32 per_page = 4;
+}
+
+message pagination_request {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
+message data {
+  int32 id = 1;
+  string name = 2;
+}
 
 message OfficeOutput {
-  pagination.PaginationMeta meta = 1;
-  repeated Office.Data data = 2;
+  pagination_meta meta = 1;
+  repeated office_svc.data data = 2;
 }
 
 message OfficeInput {
-  pagination.PaginationRequest pagination = 1;
+  pagination_request pagination = 1;
 }
 
 service OfficeService {
-  rpc SearchOfficeData(OfficeInput) returns (OfficeOutput) {};
+  rpc SearchOffice(OfficeInput) returns (OfficeOutput) {};
 }
 

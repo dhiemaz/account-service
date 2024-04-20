@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OfficeService_SearchOfficeData_FullMethodName = "/office_svc.OfficeService/SearchOfficeData"
+	OfficeService_SearchOffice_FullMethodName = "/office_svc.OfficeService/SearchOffice"
 )
 
 // OfficeServiceClient is the client API for OfficeService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OfficeServiceClient interface {
-	SearchOfficeData(ctx context.Context, in *OfficeInput, opts ...grpc.CallOption) (*OfficeOutput, error)
+	SearchOffice(ctx context.Context, in *OfficeInput, opts ...grpc.CallOption) (*OfficeOutput, error)
 }
 
 type officeServiceClient struct {
@@ -37,9 +37,9 @@ func NewOfficeServiceClient(cc grpc.ClientConnInterface) OfficeServiceClient {
 	return &officeServiceClient{cc}
 }
 
-func (c *officeServiceClient) SearchOfficeData(ctx context.Context, in *OfficeInput, opts ...grpc.CallOption) (*OfficeOutput, error) {
+func (c *officeServiceClient) SearchOffice(ctx context.Context, in *OfficeInput, opts ...grpc.CallOption) (*OfficeOutput, error) {
 	out := new(OfficeOutput)
-	err := c.cc.Invoke(ctx, OfficeService_SearchOfficeData_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, OfficeService_SearchOffice_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *officeServiceClient) SearchOfficeData(ctx context.Context, in *OfficeIn
 // All implementations must embed UnimplementedOfficeServiceServer
 // for forward compatibility
 type OfficeServiceServer interface {
-	SearchOfficeData(context.Context, *OfficeInput) (*OfficeOutput, error)
+	SearchOffice(context.Context, *OfficeInput) (*OfficeOutput, error)
 	mustEmbedUnimplementedOfficeServiceServer()
 }
 
@@ -58,8 +58,8 @@ type OfficeServiceServer interface {
 type UnimplementedOfficeServiceServer struct {
 }
 
-func (UnimplementedOfficeServiceServer) SearchOfficeData(context.Context, *OfficeInput) (*OfficeOutput, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchOfficeData not implemented")
+func (UnimplementedOfficeServiceServer) SearchOffice(context.Context, *OfficeInput) (*OfficeOutput, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchOffice not implemented")
 }
 func (UnimplementedOfficeServiceServer) mustEmbedUnimplementedOfficeServiceServer() {}
 
@@ -74,20 +74,20 @@ func RegisterOfficeServiceServer(s grpc.ServiceRegistrar, srv OfficeServiceServe
 	s.RegisterService(&OfficeService_ServiceDesc, srv)
 }
 
-func _OfficeService_SearchOfficeData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OfficeService_SearchOffice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(OfficeInput)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OfficeServiceServer).SearchOfficeData(ctx, in)
+		return srv.(OfficeServiceServer).SearchOffice(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: OfficeService_SearchOfficeData_FullMethodName,
+		FullMethod: OfficeService_SearchOffice_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OfficeServiceServer).SearchOfficeData(ctx, req.(*OfficeInput))
+		return srv.(OfficeServiceServer).SearchOffice(ctx, req.(*OfficeInput))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -100,8 +100,8 @@ var OfficeService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OfficeServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SearchOfficeData",
-			Handler:    _OfficeService_SearchOfficeData_Handler,
+			MethodName: "SearchOffice",
+			Handler:    _OfficeService_SearchOffice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

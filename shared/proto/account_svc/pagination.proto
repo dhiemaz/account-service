@@ -1,16 +1,17 @@
 syntax = "proto3";
 
-package pagination;
+package account_svc;
+
 option go_package = ".;account_svc";
 
-message PaginationMeta {
+message pagination_meta {
   int32 total_results = 1;
   int32 total_pages = 2;
   int32 page = 3;
   int32 per_page = 4;
 }
 
-message PaginationRequest {
+message pagination_request {
   int32 page_number = 1;
   int32 page_size = 2;
 }

@@ -8,106 +8,103 @@ import "validator.proto";
 import "base.proto";
 import "user.proto";
 import "pagination.proto";
-import "role.proto";
-import "office.proto";
-import "access.proto";
 
 // ---------------------------- Account Service Base Data -------------------------------------- //
 
 message RegistrationData {
   string username = 1;
-  User.Data user_data = 2;
-  repeated Role.Data role = 3;
-  repeated Access.Data access = 4;
+  account_svc.user_data user_data = 2;
+  repeated account_svc.data role = 3;
+  repeated account_svc.data access = 4;
 }
 
 message UpdateData{
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  User.Data data = 2;
+  account_svc.user_data user_data = 2;
 }
 
 message AccountData {
   string username = 1;
-  User.Data data = 2;
-  repeated Role.Data role = 3;
-  repeated Access.Data access = 4;
+  account_svc.user_data data = 2;
+  repeated account_svc.data role = 3;
+  repeated account_svc.data access = 4;
 }
 
 // --------------------------- Account Registration Request and Response -------------------- //
 message AccountRegistrationRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
   string password = 2 [(validator.field) = {string_not_empty : true}];
-  User.Data data = 3;
-  repeated Role.Data role = 4;
-  repeated Access.Data access = 5;
-  repeated Office.Data office = 6;
+  account_svc.user_data user_data = 3;
+  repeated account_svc.data role = 4;
+  repeated account_svc.data access = 5;
+  repeated account_svc.data office = 6;
 }
 
 message AccountRegistrationResponse {
-  base.BaseResponse status = 1;
+  account_svc.response status = 1;
   RegistrationData data = 2;
 }
 
 // ------------------------------ AccountUpdate Request and Response ----------------------- //
 message AccountUpdateRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  User.Data data = 2;
+  account_svc.user_data data = 2;
 }
 
 message AccountUpdateResponse {
-  base.BaseResponse status = 1;
-  User.Data data = 2;
+  account_svc.response status = 1;
+  account_svc.user_data user_data = 2;
 }
 
 // --------------------------------- AccountSearch Request and Response ---------------------- //
 message AccountSearchRequest {
-  pagination.PaginationRequest pagination = 1;
+  account_svc.pagination_request pagination = 1;
 }
 
 message AccountSearchResponse {
-  base.BaseResponse status = 1;
-  pagination.PaginationMeta meta = 2;
+  account_svc.response status = 1;
+  account_svc.pagination_meta meta = 2;
   RegistrationData data = 3;
 }
 
 // ----------------------------- AccountRemoveRole Request and Response ---------------------- //
 message AccountRemoveRoleRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated Role.Data data = 2;
+  repeated account_svc.data data = 2;
 }
 
 message AccountRemoveRoleResponse {
-  base.BaseResponse status = 1;
+  account_svc.response status = 1;
 }
 
 // -------------------------------- AccountAddRole Request and Response --------------------- //
 message AccountAddRoleRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated Role.Data data = 2;
+  repeated account_svc.data data = 2;
 }
 
 message AccountAddRoleResponse {
-  base.BaseResponse status = 1;
+  account_svc.response status = 1;
 }
 
 // -------------------------------- AccountAddOffice Request and Response ------------------- //
 message AccountAddOfficeRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated Office.Data data = 2;
+  repeated account_svc.data data = 2;
 }
 
 message AccountAddOfficeResponse {
-  base.BaseResponse status = 1;
+  account_svc.response status = 1;
 }
 
 // -------------------------------- AccountRemoveOffice Request and Response ---------------- //
 message AccountRemoveOfficeRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated Office.Data data = 2;
+  repeated account_svc.data data = 2;
 }
 
 message AccountRemoveOfficeResponse {
-  base.BaseResponse status = 1;
+  account_svc.response status = 1;
 }
 
 service EmployeeService {

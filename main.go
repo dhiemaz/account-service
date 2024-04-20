@@ -1,5 +1,8 @@
 package main
 
-func main() {
+import "github.com/dhiemaz/AccountService/cmd"
 
+func main() {
+	AccountSvc := cmd.NewCommand()
+	AccountSvc.Run()
 }

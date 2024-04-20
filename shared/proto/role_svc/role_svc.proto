@@ -3,19 +3,34 @@ syntax = "proto3";
 option go_package = ".;role_svc";
 
 package role_svc;
-import "pagination.proto";
-import "role.proto";
+
+message pagination_meta {
+  int32 total_results = 1;
+  int32 total_pages = 2;
+  int32 page = 3;
+  int32 per_page = 4;
+}
+
+message pagination_request {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
+message data{
+  int32 id = 1;
+  string name = 2;
+}
 
 message RoleResponse {
-  pagination.PaginationMeta meta = 1;
-  repeated Role.Data data = 2;
+  pagination_meta meta = 1;
+  repeated data data = 2;
 }
 
 message RoleRequest {
-  pagination.PaginationRequest pagination = 1;
+  pagination_request pagination = 1;
 }
 
 service RoleService {
-  rpc SearchRoleData(RoleRequest) returns (RoleResponse) {};
+  rpc SearchRole(RoleRequest) returns (RoleResponse) {};
 }
 

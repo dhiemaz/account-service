@@ -2,7 +2,7 @@
 
 clean:
 	@echo "--- cleanup all build and generated files ---"
-	@rm -rf infrastructure/server/grpc/proto
+	@rm -rf infrastructures/server/grpc
 
 protoc: clean
 	@echo "--- preparing proto output directories ---"
@@ -12,9 +12,21 @@ protoc: clean
 	@mkdir -p infrastructures/server/grpc/proto/role_svc
 
 	@echo "--- compiling all proto files ---"
-	@cd ./shared/proto/access_svc && protoc -I. --go-grpc_out=../../../infrastructures/server/grpc/proto/access_svc *.proto
-	@cd ./shared/proto/account_svc && protoc -I. --go-grpc_out=../../../infrastructures/server/grpc/proto/account_svc *.proto
-	@cd ./shared/proto/office_svc && protoc -I. --go-grpc_out=../../../infrastructures/server/grpc/proto/office_svc *.proto
-	@cd ./shared/proto/role_svc && protoc -I. --go-grpc_out=../../../infrastructures/server/grpc/proto/role_svc *.proto
+	@protoc -I./shared/proto/access_svc        \
+       --go_out=./infrastructures/server/grpc/proto/access_svc      \
+       --go-grpc_out=./infrastructures/server/grpc/proto/access_svc \
+       shared/proto/access_svc/*.proto
+	@protoc -I./shared/proto/account_svc        \
+       --go_out=./infrastructures/server/grpc/proto/account_svc      \
+       --go-grpc_out=./infrastructures/server/grpc/proto/account_svc \
+       shared/proto/account_svc/*.proto
+	@protoc -I./shared/proto/office_svc        \
+       --go_out=./infrastructures/server/grpc/proto/office_svc      \
+       --go-grpc_out=./infrastructures/server/grpc/proto/office_svc \
+       shared/proto/office_svc/*.proto
+	@protoc -I./shared/proto/role_svc        \
+       --go_out=./infrastructures/server/grpc/proto/role_svc      \
+       --go-grpc_out=./infrastructures/server/grpc/proto/role_svc \
+       shared/proto/role_svc/*.proto
 
 
