@@ -1,8 +1,6 @@
-# Account Service
+# Account Service #
 [![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](http://golang.org)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/gomods/athens.svg)](https://bitbucket.org/rctiplus/tusd-server)
-
-# Account Service #
 
 Account Service is a gRPC service for managing account creation, update, search and specific search
 
