@@ -9,7 +9,7 @@ import (
 type Input interface {
 	CreateNewAccount(data model.Account) (model.Account, error)
 	UpdateAccount(data model.Account) (model.Account, error)
-	GetAllData(page, limit int) ([]*model.Account, paginate.PaginationData, error)
+	GetAllData(page, limit int) ([]model.Account, paginate.PaginationData, error)
 	FindAccountByUsername(username string) (model.Account, error)
 }
 
@@ -17,6 +17,6 @@ type Input interface {
 type Output interface {
 	CreateNewAccountOutput(data model.Account, err error) (model.Account, error)
 	UpdateAccountOutput(data model.Account, err error) (model.Account, error)
-	GetAllData(data []*model.Account, paging paginate.PaginationData, err error) ([]*model.Account, paginate.PaginationData, error)
+	GetAllData(data []model.Account, paging paginate.PaginationData, err error) ([]model.Account, paginate.PaginationData, error)
 	FindAccountByUsername(data model.Account, err error) (model.Account, error)
 }

@@ -244,13 +244,8 @@ func (h AccountHandler) AccountSearch(ctx context.Context, in *account_svc.Accou
 	}
 
 	var accounts []*account_svc.RegistrationData
-	var offices []*account_svc.Data
-	var roles []*account_svc.Data
-	var access []*account_svc.Data
-
 	for _, result := range results {
 		account := account_svc.RegistrationData{
-
 			Username: result.Username,
 			UserData: &account_svc.UserData{
 				Fullname: result.Fullname,
@@ -260,6 +255,7 @@ func (h AccountHandler) AccountSearch(ctx context.Context, in *account_svc.Accou
 			},
 		}
 
+		var offices []*account_svc.Data
 		// map offices data
 		for _, val := range result.Office {
 			offices = append(offices, &account_svc.Data{
@@ -268,6 +264,7 @@ func (h AccountHandler) AccountSearch(ctx context.Context, in *account_svc.Accou
 			})
 		}
 
+		var roles []*account_svc.Data
 		// map roles data
 		for _, val := range result.Role {
 			roles = append(roles, &account_svc.Data{
@@ -276,7 +273,8 @@ func (h AccountHandler) AccountSearch(ctx context.Context, in *account_svc.Accou
 			})
 		}
 
-		// map roles data
+		var access []*account_svc.Data
+		// map access data
 		for _, val := range result.Access {
 			access = append(access, &account_svc.Data{
 				Id:   int32(val.AccessId),

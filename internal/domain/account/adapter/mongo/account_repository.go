@@ -6,7 +6,7 @@ import (
 	"github.com/dhiemaz/AccountService/constant"
 	"github.com/dhiemaz/AccountService/infrastructures/logger"
 	"github.com/dhiemaz/AccountService/internal/domain/account/model"
-	paginate "github.com/gobeam/mongo-go-pagination"
+	. "github.com/gobeam/mongo-go-pagination"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -200,24 +200,22 @@ func (r *MongoAdapter) FindOneAccountByUsername(username string) (model.Account,
 }
 
 // GetAllAccounts from database
-func (r *MongoAdapter) GetAllAccounts(page, limit int) ([]*model.Account, paginate.PaginationData, error) {
-	var datas []*model.Account
-
+func (r *MongoAdapter) GetAllAccounts(page, limit int) ([]model.Account, PaginationData, error) {
 	collection := r.mgo.Collection(constant.AccountCollection)
 
 	filter := bson.M{}
 	convertedLimitInt := int64(limit)
 	convertedPageInt := int64(page)
 
-	paginatedData, err := paginate.New(collection).Context(context.TODO()).Limit(convertedLimitInt).Page(convertedPageInt).Filter(filter).Decode(&datas).Find()
+	var accounts []model.Account
+
+	paginatedData, err := New(collection).Limit(convertedLimitInt).Page(convertedPageInt).Decode(&accounts).Filter(filter).Find()
 	if err != nil {
 		logger.WithFields(logger.Fields{"component": "account_repository", "action": "GetAllAccounts"}).
 			Errorf("error fetching all accounts: %v", err)
-
-		return datas, paginatedData.Pagination, err
 	}
 
-	return datas, paginatedData.Pagination, nil
+	return accounts, paginatedData.Pagination, nil
 }
 
 func isZeroType(value reflect.Value) bool {
