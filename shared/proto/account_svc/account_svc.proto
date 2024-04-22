@@ -14,20 +14,10 @@ import "pagination.proto";
 message RegistrationData {
   string username = 1;
   account_svc.user_data user_data = 2;
-  repeated account_svc.data role = 3;
-  repeated account_svc.data access = 4;
-}
+  repeated account_svc.data office = 3;
+  repeated account_svc.data role = 4;
+  repeated account_svc.data access = 5;
 
-message UpdateData{
-  string username = 1 [(validator.field) = {string_not_empty : true}];
-  account_svc.user_data user_data = 2;
-}
-
-message AccountData {
-  string username = 1;
-  account_svc.user_data data = 2;
-  repeated account_svc.data role = 3;
-  repeated account_svc.data access = 4;
 }
 
 // --------------------------- Account Registration Request and Response -------------------- //
@@ -42,18 +32,25 @@ message AccountRegistrationRequest {
 
 message AccountRegistrationResponse {
   account_svc.response status = 1;
-  RegistrationData data = 2;
+  account_svc.RegistrationData data = 2;
 }
 
 // ------------------------------ AccountUpdate Request and Response ----------------------- //
 message AccountUpdateRequest {
   string username = 1 [(validator.field) = {string_not_empty : true}];
   account_svc.user_data data = 2;
+  repeated account_svc.data role = 3;
+  repeated account_svc.data access = 4;
+  repeated account_svc.data office = 5;
 }
 
 message AccountUpdateResponse {
   account_svc.response status = 1;
-  account_svc.user_data user_data = 2;
+  string username = 2;
+  account_svc.user_data user_data = 3;
+  repeated account_svc.data role = 4;
+  repeated account_svc.data access = 5;
+  repeated account_svc.data office = 6;
 }
 
 // --------------------------------- AccountSearch Request and Response ---------------------- //
@@ -63,56 +60,23 @@ message AccountSearchRequest {
 
 message AccountSearchResponse {
   account_svc.response status = 1;
-  account_svc.pagination_meta meta = 2;
-  RegistrationData data = 3;
+  account_svc.pagination pagination = 2;
+  repeated account_svc.RegistrationData data = 3;
 }
 
-// ----------------------------- AccountRemoveRole Request and Response ---------------------- //
-message AccountRemoveRoleRequest {
-  string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated account_svc.data data = 2;
+// --------------------------------- AccountSearchByUsername Request and Response ---------------------- //
+message AccountSearchByUsernameRequest {
+  string username = 1;
 }
 
-message AccountRemoveRoleResponse {
+message AccountSearchByUsernameResponse {
   account_svc.response status = 1;
-}
-
-// -------------------------------- AccountAddRole Request and Response --------------------- //
-message AccountAddRoleRequest {
-  string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated account_svc.data data = 2;
-}
-
-message AccountAddRoleResponse {
-  account_svc.response status = 1;
-}
-
-// -------------------------------- AccountAddOffice Request and Response ------------------- //
-message AccountAddOfficeRequest {
-  string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated account_svc.data data = 2;
-}
-
-message AccountAddOfficeResponse {
-  account_svc.response status = 1;
-}
-
-// -------------------------------- AccountRemoveOffice Request and Response ---------------- //
-message AccountRemoveOfficeRequest {
-  string username = 1 [(validator.field) = {string_not_empty : true}];
-  repeated account_svc.data data = 2;
-}
-
-message AccountRemoveOfficeResponse {
-  account_svc.response status = 1;
+  account_svc.RegistrationData data = 3;
 }
 
 service EmployeeService {
   rpc AccountRegistration(AccountRegistrationRequest) returns (AccountRegistrationResponse) {};
   rpc AccountUpdate(AccountUpdateRequest) returns (AccountUpdateResponse) {};
   rpc AccountSearch(AccountSearchRequest) returns (AccountSearchResponse) {};
-  rpc AccountAddRole(AccountAddRoleRequest) returns (AccountAddRoleResponse) {};
-  rpc AccountRemoveRole(AccountRemoveRoleRequest) returns (AccountRemoveRoleResponse) {};
-  rpc AccountAddOffice(AccountAddOfficeRequest) returns (AccountAddOfficeResponse) {};
-  rpc AccountRemoveOffice(AccountRemoveOfficeRequest) returns (AccountRemoveOfficeResponse) {};
+  rpc AccountSearchByUsername(AccountSearchByUsernameRequest) returns (AccountSearchByUsernameResponse) {};
 }

@@ -4,6 +4,8 @@ option go_package = ".;role_svc";
 
 package role_svc;
 
+import "empty.proto";
+
 message pagination_meta {
   int32 total_results = 1;
   int32 total_pages = 2;
@@ -21,16 +23,16 @@ message data{
   string name = 2;
 }
 
-message RoleResponse {
+message SearchRoleResponse {
   pagination_meta meta = 1;
   repeated data data = 2;
 }
 
-message RoleRequest {
-  pagination_request pagination = 1;
+message SearchRoleRequest {
+  google.protobuf.Empty empty = 1;
 }
 
 service RoleService {
-  rpc SearchRole(RoleRequest) returns (RoleResponse) {};
+  rpc SearchRole(SearchRoleRequest) returns (SearchRoleResponse) {};
 }
 

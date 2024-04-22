@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RoleServiceClient interface {
-	SearchRole(ctx context.Context, in *RoleRequest, opts ...grpc.CallOption) (*RoleResponse, error)
+	SearchRole(ctx context.Context, in *SearchRoleRequest, opts ...grpc.CallOption) (*SearchRoleResponse, error)
 }
 
 type roleServiceClient struct {
@@ -37,8 +37,8 @@ func NewRoleServiceClient(cc grpc.ClientConnInterface) RoleServiceClient {
 	return &roleServiceClient{cc}
 }
 
-func (c *roleServiceClient) SearchRole(ctx context.Context, in *RoleRequest, opts ...grpc.CallOption) (*RoleResponse, error) {
-	out := new(RoleResponse)
+func (c *roleServiceClient) SearchRole(ctx context.Context, in *SearchRoleRequest, opts ...grpc.CallOption) (*SearchRoleResponse, error) {
+	out := new(SearchRoleResponse)
 	err := c.cc.Invoke(ctx, RoleService_SearchRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -47,21 +47,19 @@ func (c *roleServiceClient) SearchRole(ctx context.Context, in *RoleRequest, opt
 }
 
 // RoleServiceServer is the server API for RoleService service.
-// All implementations must embed UnimplementedRoleServiceServer
+// All implementations should embed UnimplementedRoleServiceServer
 // for forward compatibility
 type RoleServiceServer interface {
-	SearchRole(context.Context, *RoleRequest) (*RoleResponse, error)
-	mustEmbedUnimplementedRoleServiceServer()
+	SearchRole(context.Context, *SearchRoleRequest) (*SearchRoleResponse, error)
 }
 
-// UnimplementedRoleServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedRoleServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedRoleServiceServer struct {
 }
 
-func (UnimplementedRoleServiceServer) SearchRole(context.Context, *RoleRequest) (*RoleResponse, error) {
+func (UnimplementedRoleServiceServer) SearchRole(context.Context, *SearchRoleRequest) (*SearchRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchRole not implemented")
 }
-func (UnimplementedRoleServiceServer) mustEmbedUnimplementedRoleServiceServer() {}
 
 // UnsafeRoleServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to RoleServiceServer will
@@ -75,7 +73,7 @@ func RegisterRoleServiceServer(s grpc.ServiceRegistrar, srv RoleServiceServer) {
 }
 
 func _RoleService_SearchRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RoleRequest)
+	in := new(SearchRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -87,7 +85,7 @@ func _RoleService_SearchRole_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: RoleService_SearchRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RoleServiceServer).SearchRole(ctx, req.(*RoleRequest))
+		return srv.(RoleServiceServer).SearchRole(ctx, req.(*SearchRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

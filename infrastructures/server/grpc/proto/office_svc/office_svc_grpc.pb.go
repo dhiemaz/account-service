@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OfficeServiceClient interface {
-	SearchOffice(ctx context.Context, in *OfficeInput, opts ...grpc.CallOption) (*OfficeOutput, error)
+	SearchOffice(ctx context.Context, in *SearchOfficeRequest, opts ...grpc.CallOption) (*SearchOfficeResponse, error)
 }
 
 type officeServiceClient struct {
@@ -37,8 +37,8 @@ func NewOfficeServiceClient(cc grpc.ClientConnInterface) OfficeServiceClient {
 	return &officeServiceClient{cc}
 }
 
-func (c *officeServiceClient) SearchOffice(ctx context.Context, in *OfficeInput, opts ...grpc.CallOption) (*OfficeOutput, error) {
-	out := new(OfficeOutput)
+func (c *officeServiceClient) SearchOffice(ctx context.Context, in *SearchOfficeRequest, opts ...grpc.CallOption) (*SearchOfficeResponse, error) {
+	out := new(SearchOfficeResponse)
 	err := c.cc.Invoke(ctx, OfficeService_SearchOffice_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -47,21 +47,19 @@ func (c *officeServiceClient) SearchOffice(ctx context.Context, in *OfficeInput,
 }
 
 // OfficeServiceServer is the server API for OfficeService service.
-// All implementations must embed UnimplementedOfficeServiceServer
+// All implementations should embed UnimplementedOfficeServiceServer
 // for forward compatibility
 type OfficeServiceServer interface {
-	SearchOffice(context.Context, *OfficeInput) (*OfficeOutput, error)
-	mustEmbedUnimplementedOfficeServiceServer()
+	SearchOffice(context.Context, *SearchOfficeRequest) (*SearchOfficeResponse, error)
 }
 
-// UnimplementedOfficeServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedOfficeServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedOfficeServiceServer struct {
 }
 
-func (UnimplementedOfficeServiceServer) SearchOffice(context.Context, *OfficeInput) (*OfficeOutput, error) {
+func (UnimplementedOfficeServiceServer) SearchOffice(context.Context, *SearchOfficeRequest) (*SearchOfficeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchOffice not implemented")
 }
-func (UnimplementedOfficeServiceServer) mustEmbedUnimplementedOfficeServiceServer() {}
 
 // UnsafeOfficeServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to OfficeServiceServer will
@@ -75,7 +73,7 @@ func RegisterOfficeServiceServer(s grpc.ServiceRegistrar, srv OfficeServiceServe
 }
 
 func _OfficeService_SearchOffice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OfficeInput)
+	in := new(SearchOfficeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -87,7 +85,7 @@ func _OfficeService_SearchOffice_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: OfficeService_SearchOffice_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OfficeServiceServer).SearchOffice(ctx, req.(*OfficeInput))
+		return srv.(OfficeServiceServer).SearchOffice(ctx, req.(*SearchOfficeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

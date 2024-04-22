@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dhiemaz/AccountService/cmd/grpc"
 	"github.com/dhiemaz/AccountService/config"
+	"github.com/dhiemaz/AccountService/infrastructures/database"
 	"github.com/dhiemaz/AccountService/infrastructures/logger"
 	"github.com/spf13/cobra"
 )
@@ -34,13 +35,13 @@ func (c Command) Run() {
 			Long:  "Run account service gRPC server",
 			PreRun: func(cmd *cobra.Command, args []string) {
 				fmt.Println(text)
+				database.MongoMustConnect(config.GetConfig())
 
-				config.Initialize()
 				logger.WithFields(logger.Fields{"component": "command", "action": "serve gRPC service"}).
 					Infof("pre-run command done")
 			},
 			Run: func(cmd *cobra.Command, args []string) {
-				grpc.RunServer()
+				grpc.RunServer(config.GetConfig())
 			},
 			PostRun: func(cmd *cobra.Command, args []string) {
 				// close database connection

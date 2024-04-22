@@ -4,6 +4,8 @@ option go_package = ".;office_svc";
 
 package office_svc;
 
+import "empty.proto";
+
 message pagination_meta {
   int32 total_results = 1;
   int32 total_pages = 2;
@@ -21,16 +23,16 @@ message data {
   string name = 2;
 }
 
-message OfficeOutput {
+message SearchOfficeResponse {
   pagination_meta meta = 1;
   repeated office_svc.data data = 2;
 }
 
-message OfficeInput {
-  pagination_request pagination = 1;
+message SearchOfficeRequest {
+  google.protobuf.Empty empty = 1;
 }
 
 service OfficeService {
-  rpc SearchOffice(OfficeInput) returns (OfficeOutput) {};
+  rpc SearchOffice(SearchOfficeRequest) returns (SearchOfficeResponse) {};
 }
 

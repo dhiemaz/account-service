@@ -9,5 +9,6 @@ import "validator.proto";
 message user_data {
   string fullname = 1 [(validator.field) = {string_not_empty : true}];
   string address = 2;
-  string province = 3;
+  string zipcode = 3;
+  string province = 4;
 }

@@ -4,22 +4,35 @@ import (
 	"context"
 	"fmt"
 	"github.com/dhiemaz/AccountService/config"
+	"github.com/dhiemaz/AccountService/infrastructures/logger"
+	"github.com/dhiemaz/AccountService/infrastructures/server/grpc/proto/access_svc"
+	"github.com/dhiemaz/AccountService/infrastructures/server/grpc/proto/account_svc"
+	"github.com/dhiemaz/AccountService/infrastructures/server/grpc/proto/office_svc"
+	"github.com/dhiemaz/AccountService/infrastructures/server/grpc/proto/role_svc"
+	"github.com/dhiemaz/AccountService/internal/container"
+	accessHandler "github.com/dhiemaz/AccountService/internal/domain/access/handler"
+	accessUsecase "github.com/dhiemaz/AccountService/internal/domain/access/usecase"
+	accountHandler "github.com/dhiemaz/AccountService/internal/domain/account/handler"
+	accountUsecase "github.com/dhiemaz/AccountService/internal/domain/account/usecase"
+	officeHandler "github.com/dhiemaz/AccountService/internal/domain/office/handler"
+	officeUsecase "github.com/dhiemaz/AccountService/internal/domain/office/usecase"
+	roleHandler "github.com/dhiemaz/AccountService/internal/domain/role/handler"
+	roleUsecase "github.com/dhiemaz/AccountService/internal/domain/role/usecase"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
-	"log"
 	"net"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-func RunServer() {
-	log.Println("starting gRPC server...")
+func RunServer(cfg *config.Config) {
+	logger.WithFields(logger.Fields{"component": "cmd", "action": "RunServer"}).
+		Infof("starting gRPC server...")
 
-	cfg := config.GetConfig()
-	tls := cfg.Server.TLS
-
+	tls := cfg.GrpcTLS
 	opts := []grpc.ServerOption{}
 
 	if tls {
@@ -27,7 +40,9 @@ func RunServer() {
 		serverKey := "server.key"
 		creds, err := credentials.NewServerTLSFromFile(serverCert, serverKey)
 		if err != nil {
-			log.Fatalln("failed to loading certificates, err : ", err)
+			logger.WithFields(logger.Fields{"component": "cmd", "action": "RunServer"}).
+				Errorf("failed to loading certificates, error : %v", err)
+
 			os.Exit(1)
 		}
 
@@ -37,66 +52,57 @@ func RunServer() {
 	opts = append(opts, grpc.UnaryInterceptor(serverInterceptor))
 	server := grpc.NewServer(opts...)
 
-	// ctn := di.NewContainer()
-	//Apply(grpcServer, ctn)
+	ctn := container.NewContainer()
+	Apply(server, ctn)
 
-	svcHost := cfg.Server.Host
-	svcPort := cfg.Server.Port
+	svcHost := cfg.GrpcHost
+	svcPort := cfg.GrpcPort
 
 	go func() {
 		lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", svcHost, svcPort))
 		if err != nil {
-			log.Fatalf("failed listen, err : %v", err)
+			logger.WithFields(logger.Fields{"component": "cmd", "action": "RunServer"}).
+				Errorf("failed listen, error : %v", err)
+
+			os.Exit(1)
 		}
 
 		if err := server.Serve(lis); err != nil {
-			log.Fatalf("failed start gRPC server, err : %v", err)
+			logger.WithFields(logger.Fields{"component": "cmd", "action": "RunServer"}).
+				Errorf("failed start gRPC server, error : %v", err)
 		}
 	}()
 
-	fmt.Printf("gRPC server is running at %s:%d\n", svcHost, svcPort)
+	logger.WithFields(logger.Fields{"component": "cmd", "action": "RunServer"}).
+		Infof("gRPC server is running at %s:%d", svcHost, svcPort)
 
 	c := make(chan os.Signal)
 	signal.Notify(c, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	signal := <-c
-	log.Fatalf("process killed with signal: %v\n", signal.String())
+
+	logger.WithFields(logger.Fields{"component": "cmd", "action": "RunServer"}).
+		Infof("process killed with signal: %v", signal.String())
+
 }
 
 func serverInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-	//m, err := getMetadata(ctx)
-	//logUUID, _ := uuid.NewRandom()
-	//logger.WriteLog(logger.Info, req, m, "request", "", info.FullMethod, logUUID.String(), codes.OK)
-
-	//if err != nil {
-	//	return di.MetaData{}, status.Errorf(codes.InvalidArgument, err.Error())
-	//}
-
-	//log.Println("Metadata ", m)
-	//if _, err := validateMetadata(info, m); err != nil {
-	//	return nil, err
-	//}
-
-	//if v, ok := req.(validator); ok {
-	//	if err := v.Validate(); err != nil {
-	//		logger.WriteLog(logger.Error, req, m, "request", err.Error(), info.FullMethod, logUUID.String(), codes.InvalidArgument)
-	//		return nil, status.Errorf(codes.InvalidArgument, err.Error())
-	//	}
-	//}
-
 	// Calls the handler
 	res, err := handler(ctx, req)
 	if err != nil {
-		if _, ok := status.FromError(err); ok {
-			//logger.WriteLog(logger.Error, nil, m, "response", e.Message(), info.FullMethod, logUUID.String(), e.Code())
+		if e, ok := status.FromError(err); ok {
+			logger.WithFields(logger.Fields{"component": "grpc", "action": info.FullMethod}).
+				Errorf("code : %v, response : %v, ", e.Code(), e.Message())
 		}
 	} else {
-		//logger.WriteLog(logger.Info, res, m, "response", codes.OK.String(), info.FullMethod, logUUID.String(), codes.OK)
+		logger.WithFields(logger.Fields{"component": "grpc", "action": info.FullMethod}).
+			Infof("code : %v, response : %v, ", codes.OK, codes.OK.String())
 	}
 	return res, err
 }
 
-/*
-func Apply(server *grpc.Server, ctn *con) {
-
+func Apply(server *grpc.Server, ctn *container.Container) {
+	access_svc.RegisterAccessServiceServer(server, accessHandler.NewAccessHandler(ctn.Resolve("accessSvc").(accessUsecase.AccessUsecase)))
+	account_svc.RegisterEmployeeServiceServer(server, accountHandler.NewAccountHandler(ctn.Resolve("accountSvc").(accountUsecase.AccountUsecase)))
+	office_svc.RegisterOfficeServiceServer(server, officeHandler.NewOfficeHandler(ctn.Resolve("officeSvc").(officeUsecase.OfficeUsecase)))
+	role_svc.RegisterRoleServiceServer(server, roleHandler.NewRoleHandler(ctn.Resolve("roleSvc").(roleUsecase.RoleUsecase)))
 }
-*/

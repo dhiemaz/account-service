@@ -19,13 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	EmployeeService_AccountRegistration_FullMethodName = "/account_svc.EmployeeService/AccountRegistration"
-	EmployeeService_AccountUpdate_FullMethodName       = "/account_svc.EmployeeService/AccountUpdate"
-	EmployeeService_AccountSearch_FullMethodName       = "/account_svc.EmployeeService/AccountSearch"
-	EmployeeService_AccountAddRole_FullMethodName      = "/account_svc.EmployeeService/AccountAddRole"
-	EmployeeService_AccountRemoveRole_FullMethodName   = "/account_svc.EmployeeService/AccountRemoveRole"
-	EmployeeService_AccountAddOffice_FullMethodName    = "/account_svc.EmployeeService/AccountAddOffice"
-	EmployeeService_AccountRemoveOffice_FullMethodName = "/account_svc.EmployeeService/AccountRemoveOffice"
+	EmployeeService_AccountRegistration_FullMethodName     = "/account_svc.EmployeeService/AccountRegistration"
+	EmployeeService_AccountUpdate_FullMethodName           = "/account_svc.EmployeeService/AccountUpdate"
+	EmployeeService_AccountSearch_FullMethodName           = "/account_svc.EmployeeService/AccountSearch"
+	EmployeeService_AccountSearchByUsername_FullMethodName = "/account_svc.EmployeeService/AccountSearchByUsername"
 )
 
 // EmployeeServiceClient is the client API for EmployeeService service.
@@ -35,10 +32,7 @@ type EmployeeServiceClient interface {
 	AccountRegistration(ctx context.Context, in *AccountRegistrationRequest, opts ...grpc.CallOption) (*AccountRegistrationResponse, error)
 	AccountUpdate(ctx context.Context, in *AccountUpdateRequest, opts ...grpc.CallOption) (*AccountUpdateResponse, error)
 	AccountSearch(ctx context.Context, in *AccountSearchRequest, opts ...grpc.CallOption) (*AccountSearchResponse, error)
-	AccountAddRole(ctx context.Context, in *AccountAddRoleRequest, opts ...grpc.CallOption) (*AccountAddRoleResponse, error)
-	AccountRemoveRole(ctx context.Context, in *AccountRemoveRoleRequest, opts ...grpc.CallOption) (*AccountRemoveRoleResponse, error)
-	AccountAddOffice(ctx context.Context, in *AccountAddOfficeRequest, opts ...grpc.CallOption) (*AccountAddOfficeResponse, error)
-	AccountRemoveOffice(ctx context.Context, in *AccountRemoveOfficeRequest, opts ...grpc.CallOption) (*AccountRemoveOfficeResponse, error)
+	AccountSearchByUsername(ctx context.Context, in *AccountSearchByUsernameRequest, opts ...grpc.CallOption) (*AccountSearchByUsernameResponse, error)
 }
 
 type employeeServiceClient struct {
@@ -76,36 +70,9 @@ func (c *employeeServiceClient) AccountSearch(ctx context.Context, in *AccountSe
 	return out, nil
 }
 
-func (c *employeeServiceClient) AccountAddRole(ctx context.Context, in *AccountAddRoleRequest, opts ...grpc.CallOption) (*AccountAddRoleResponse, error) {
-	out := new(AccountAddRoleResponse)
-	err := c.cc.Invoke(ctx, EmployeeService_AccountAddRole_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *employeeServiceClient) AccountRemoveRole(ctx context.Context, in *AccountRemoveRoleRequest, opts ...grpc.CallOption) (*AccountRemoveRoleResponse, error) {
-	out := new(AccountRemoveRoleResponse)
-	err := c.cc.Invoke(ctx, EmployeeService_AccountRemoveRole_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *employeeServiceClient) AccountAddOffice(ctx context.Context, in *AccountAddOfficeRequest, opts ...grpc.CallOption) (*AccountAddOfficeResponse, error) {
-	out := new(AccountAddOfficeResponse)
-	err := c.cc.Invoke(ctx, EmployeeService_AccountAddOffice_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *employeeServiceClient) AccountRemoveOffice(ctx context.Context, in *AccountRemoveOfficeRequest, opts ...grpc.CallOption) (*AccountRemoveOfficeResponse, error) {
-	out := new(AccountRemoveOfficeResponse)
-	err := c.cc.Invoke(ctx, EmployeeService_AccountRemoveOffice_FullMethodName, in, out, opts...)
+func (c *employeeServiceClient) AccountSearchByUsername(ctx context.Context, in *AccountSearchByUsernameRequest, opts ...grpc.CallOption) (*AccountSearchByUsernameResponse, error) {
+	out := new(AccountSearchByUsernameResponse)
+	err := c.cc.Invoke(ctx, EmployeeService_AccountSearchByUsername_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -113,20 +80,16 @@ func (c *employeeServiceClient) AccountRemoveOffice(ctx context.Context, in *Acc
 }
 
 // EmployeeServiceServer is the server API for EmployeeService service.
-// All implementations must embed UnimplementedEmployeeServiceServer
+// All implementations should embed UnimplementedEmployeeServiceServer
 // for forward compatibility
 type EmployeeServiceServer interface {
 	AccountRegistration(context.Context, *AccountRegistrationRequest) (*AccountRegistrationResponse, error)
 	AccountUpdate(context.Context, *AccountUpdateRequest) (*AccountUpdateResponse, error)
 	AccountSearch(context.Context, *AccountSearchRequest) (*AccountSearchResponse, error)
-	AccountAddRole(context.Context, *AccountAddRoleRequest) (*AccountAddRoleResponse, error)
-	AccountRemoveRole(context.Context, *AccountRemoveRoleRequest) (*AccountRemoveRoleResponse, error)
-	AccountAddOffice(context.Context, *AccountAddOfficeRequest) (*AccountAddOfficeResponse, error)
-	AccountRemoveOffice(context.Context, *AccountRemoveOfficeRequest) (*AccountRemoveOfficeResponse, error)
-	mustEmbedUnimplementedEmployeeServiceServer()
+	AccountSearchByUsername(context.Context, *AccountSearchByUsernameRequest) (*AccountSearchByUsernameResponse, error)
 }
 
-// UnimplementedEmployeeServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedEmployeeServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedEmployeeServiceServer struct {
 }
 
@@ -139,19 +102,9 @@ func (UnimplementedEmployeeServiceServer) AccountUpdate(context.Context, *Accoun
 func (UnimplementedEmployeeServiceServer) AccountSearch(context.Context, *AccountSearchRequest) (*AccountSearchResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AccountSearch not implemented")
 }
-func (UnimplementedEmployeeServiceServer) AccountAddRole(context.Context, *AccountAddRoleRequest) (*AccountAddRoleResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AccountAddRole not implemented")
+func (UnimplementedEmployeeServiceServer) AccountSearchByUsername(context.Context, *AccountSearchByUsernameRequest) (*AccountSearchByUsernameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AccountSearchByUsername not implemented")
 }
-func (UnimplementedEmployeeServiceServer) AccountRemoveRole(context.Context, *AccountRemoveRoleRequest) (*AccountRemoveRoleResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AccountRemoveRole not implemented")
-}
-func (UnimplementedEmployeeServiceServer) AccountAddOffice(context.Context, *AccountAddOfficeRequest) (*AccountAddOfficeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AccountAddOffice not implemented")
-}
-func (UnimplementedEmployeeServiceServer) AccountRemoveOffice(context.Context, *AccountRemoveOfficeRequest) (*AccountRemoveOfficeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AccountRemoveOffice not implemented")
-}
-func (UnimplementedEmployeeServiceServer) mustEmbedUnimplementedEmployeeServiceServer() {}
 
 // UnsafeEmployeeServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to EmployeeServiceServer will
@@ -218,74 +171,20 @@ func _EmployeeService_AccountSearch_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _EmployeeService_AccountAddRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountAddRoleRequest)
+func _EmployeeService_AccountSearchByUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountSearchByUsernameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EmployeeServiceServer).AccountAddRole(ctx, in)
+		return srv.(EmployeeServiceServer).AccountSearchByUsername(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: EmployeeService_AccountAddRole_FullMethodName,
+		FullMethod: EmployeeService_AccountSearchByUsername_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EmployeeServiceServer).AccountAddRole(ctx, req.(*AccountAddRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EmployeeService_AccountRemoveRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountRemoveRoleRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EmployeeServiceServer).AccountRemoveRole(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EmployeeService_AccountRemoveRole_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EmployeeServiceServer).AccountRemoveRole(ctx, req.(*AccountRemoveRoleRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EmployeeService_AccountAddOffice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountAddOfficeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EmployeeServiceServer).AccountAddOffice(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EmployeeService_AccountAddOffice_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EmployeeServiceServer).AccountAddOffice(ctx, req.(*AccountAddOfficeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _EmployeeService_AccountRemoveOffice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccountRemoveOfficeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EmployeeServiceServer).AccountRemoveOffice(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EmployeeService_AccountRemoveOffice_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EmployeeServiceServer).AccountRemoveOffice(ctx, req.(*AccountRemoveOfficeRequest))
+		return srv.(EmployeeServiceServer).AccountSearchByUsername(ctx, req.(*AccountSearchByUsernameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -310,20 +209,8 @@ var EmployeeService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _EmployeeService_AccountSearch_Handler,
 		},
 		{
-			MethodName: "AccountAddRole",
-			Handler:    _EmployeeService_AccountAddRole_Handler,
-		},
-		{
-			MethodName: "AccountRemoveRole",
-			Handler:    _EmployeeService_AccountRemoveRole_Handler,
-		},
-		{
-			MethodName: "AccountAddOffice",
-			Handler:    _EmployeeService_AccountAddOffice_Handler,
-		},
-		{
-			MethodName: "AccountRemoveOffice",
-			Handler:    _EmployeeService_AccountRemoveOffice_Handler,
+			MethodName: "AccountSearchByUsername",
+			Handler:    _EmployeeService_AccountSearchByUsername_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

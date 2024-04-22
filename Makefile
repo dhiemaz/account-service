@@ -14,19 +14,19 @@ protoc: clean
 	@echo "--- compiling all proto files ---"
 	@protoc -I./shared/proto/access_svc        \
        --go_out=./infrastructures/server/grpc/proto/access_svc      \
-       --go-grpc_out=./infrastructures/server/grpc/proto/access_svc \
+       --go-grpc_out=require_unimplemented_servers=false:./infrastructures/server/grpc/proto/access_svc \
        shared/proto/access_svc/*.proto
 	@protoc -I./shared/proto/account_svc        \
        --go_out=./infrastructures/server/grpc/proto/account_svc      \
-       --go-grpc_out=./infrastructures/server/grpc/proto/account_svc \
+       --go-grpc_out=require_unimplemented_servers=false:./infrastructures/server/grpc/proto/account_svc \
        shared/proto/account_svc/*.proto
 	@protoc -I./shared/proto/office_svc        \
        --go_out=./infrastructures/server/grpc/proto/office_svc      \
-       --go-grpc_out=./infrastructures/server/grpc/proto/office_svc \
+       --go-grpc_out=require_unimplemented_servers=false:./infrastructures/server/grpc/proto/office_svc \
        shared/proto/office_svc/*.proto
 	@protoc -I./shared/proto/role_svc        \
        --go_out=./infrastructures/server/grpc/proto/role_svc      \
-       --go-grpc_out=./infrastructures/server/grpc/proto/role_svc \
+       --go-grpc_out=require_unimplemented_servers=false:./infrastructures/server/grpc/proto/role_svc \
        shared/proto/role_svc/*.proto
 
 

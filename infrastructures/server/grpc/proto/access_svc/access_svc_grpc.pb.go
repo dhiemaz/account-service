@@ -26,7 +26,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccessServiceClient interface {
-	SearchAccessData(ctx context.Context, in *AccessInput, opts ...grpc.CallOption) (*AccessOutput, error)
+	SearchAccessData(ctx context.Context, in *SearchAccessRequest, opts ...grpc.CallOption) (*SearchAccessResponse, error)
 }
 
 type accessServiceClient struct {
@@ -37,8 +37,8 @@ func NewAccessServiceClient(cc grpc.ClientConnInterface) AccessServiceClient {
 	return &accessServiceClient{cc}
 }
 
-func (c *accessServiceClient) SearchAccessData(ctx context.Context, in *AccessInput, opts ...grpc.CallOption) (*AccessOutput, error) {
-	out := new(AccessOutput)
+func (c *accessServiceClient) SearchAccessData(ctx context.Context, in *SearchAccessRequest, opts ...grpc.CallOption) (*SearchAccessResponse, error) {
+	out := new(SearchAccessResponse)
 	err := c.cc.Invoke(ctx, AccessService_SearchAccessData_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -47,21 +47,19 @@ func (c *accessServiceClient) SearchAccessData(ctx context.Context, in *AccessIn
 }
 
 // AccessServiceServer is the server API for AccessService service.
-// All implementations must embed UnimplementedAccessServiceServer
+// All implementations should embed UnimplementedAccessServiceServer
 // for forward compatibility
 type AccessServiceServer interface {
-	SearchAccessData(context.Context, *AccessInput) (*AccessOutput, error)
-	mustEmbedUnimplementedAccessServiceServer()
+	SearchAccessData(context.Context, *SearchAccessRequest) (*SearchAccessResponse, error)
 }
 
-// UnimplementedAccessServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedAccessServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedAccessServiceServer struct {
 }
 
-func (UnimplementedAccessServiceServer) SearchAccessData(context.Context, *AccessInput) (*AccessOutput, error) {
+func (UnimplementedAccessServiceServer) SearchAccessData(context.Context, *SearchAccessRequest) (*SearchAccessResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchAccessData not implemented")
 }
-func (UnimplementedAccessServiceServer) mustEmbedUnimplementedAccessServiceServer() {}
 
 // UnsafeAccessServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to AccessServiceServer will
@@ -75,7 +73,7 @@ func RegisterAccessServiceServer(s grpc.ServiceRegistrar, srv AccessServiceServe
 }
 
 func _AccessService_SearchAccessData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AccessInput)
+	in := new(SearchAccessRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -87,7 +85,7 @@ func _AccessService_SearchAccessData_Handler(srv interface{}, ctx context.Contex
 		FullMethod: AccessService_SearchAccessData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AccessServiceServer).SearchAccessData(ctx, req.(*AccessInput))
+		return srv.(AccessServiceServer).SearchAccessData(ctx, req.(*SearchAccessRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
