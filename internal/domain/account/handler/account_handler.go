@@ -76,6 +76,39 @@ func (h AccountHandler) AccountRegistration(ctx context.Context, in *account_svc
 			return &response, nil
 		}
 
+		if strings.Contains(err.Error(), "invalid branch_id or branch_name") {
+			response := account_svc.AccountRegistrationResponse{
+				Status: &account_svc.Response{
+					Code:    "02",
+					Message: err.Error(),
+				},
+				Data: nil,
+			}
+			return &response, nil
+		}
+
+		if strings.Contains(err.Error(), "invalid role_id or role_name") {
+			response := account_svc.AccountRegistrationResponse{
+				Status: &account_svc.Response{
+					Code:    "02",
+					Message: err.Error(),
+				},
+				Data: nil,
+			}
+			return &response, nil
+		}
+
+		if strings.Contains(err.Error(), "invalid access_id or access_name") {
+			response := account_svc.AccountRegistrationResponse{
+				Status: &account_svc.Response{
+					Code:    "02",
+					Message: err.Error(),
+				},
+				Data: nil,
+			}
+			return &response, nil
+		}
+
 		return nil, status.Errorf(codes.Unknown, err.Error())
 	}
 
@@ -146,6 +179,36 @@ func (h AccountHandler) AccountUpdate(ctx context.Context, in *account_svc.Accou
 			response := account_svc.AccountUpdateResponse{
 				Status: &account_svc.Response{
 					Code:    "01",
+					Message: err.Error(),
+				},
+			}
+			return &response, nil
+		}
+
+		if strings.Contains(err.Error(), "invalid branch_id or branch_name") {
+			response := account_svc.AccountUpdateResponse{
+				Status: &account_svc.Response{
+					Code:    "02",
+					Message: err.Error(),
+				},
+			}
+			return &response, nil
+		}
+
+		if strings.Contains(err.Error(), "invalid role_id or role_name") {
+			response := account_svc.AccountUpdateResponse{
+				Status: &account_svc.Response{
+					Code:    "02",
+					Message: err.Error(),
+				},
+			}
+			return &response, nil
+		}
+
+		if strings.Contains(err.Error(), "invalid access_id or access_name") {
+			response := account_svc.AccountUpdateResponse{
+				Status: &account_svc.Response{
+					Code:    "02",
 					Message: err.Error(),
 				},
 			}

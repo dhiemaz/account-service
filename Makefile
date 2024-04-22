@@ -1,4 +1,4 @@
-.PHONY: clean protoc test grpc build
+.PHONY: clean protoc test grpc build dep migrate-up migrate-down
 BIN_NAME=account_svc
 
 clean:
@@ -41,5 +41,11 @@ run: dep build
 	@echo "> running application ..."
 	@./account_svc grpc
 
+migrate-up: dep build
+	@echo "> running migration up ..."
+	@./account_svc migrate-up
 
+migrate-down: dep build
+	@echo "> running migration down ..."
+	@./account_svc migrate-down
 

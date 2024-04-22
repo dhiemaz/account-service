@@ -37,7 +37,6 @@ func (h OfficeHandler) SearchOffice(ctx context.Context, input *office_svc.Searc
 	}
 
 	return &office_svc.SearchOfficeResponse{
-		Meta: nil,
 		Data: datas,
 	}, nil
 }

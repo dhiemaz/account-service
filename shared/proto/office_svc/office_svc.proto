@@ -6,26 +6,13 @@ package office_svc;
 
 import "empty.proto";
 
-message pagination_meta {
-  int32 total_results = 1;
-  int32 total_pages = 2;
-  int32 page = 3;
-  int32 per_page = 4;
-}
-
-message pagination_request {
-  int32 page_number = 1;
-  int32 page_size = 2;
-}
-
 message data {
   int32 id = 1;
   string name = 2;
 }
 
 message SearchOfficeResponse {
-  pagination_meta meta = 1;
-  repeated office_svc.data data = 2;
+  repeated office_svc.data data = 1;
 }
 
 message SearchOfficeRequest {

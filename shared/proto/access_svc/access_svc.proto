@@ -6,27 +6,18 @@ import "empty.proto";
 
 option go_package = ".;access_svc";
 
-message PaginationMeta {
-  int32 TotalResults = 1;
-  int32 TotalPages = 2;
-  int32 Page = 3;
-  int32 PerPage = 4;
-}
-
 message Data {
   int32 Id = 1;
   string Name = 2;
 }
 
 message SearchAccessResponse {
-  access_svc.PaginationMeta Meta = 1;
-  repeated access_svc.Data Data = 2;
+  repeated access_svc.Data Data = 1;
 }
 
 message SearchAccessRequest {
   google.protobuf.Empty empty = 1;
 }
-
 
 service AccessService {
   rpc SearchAccessData(SearchAccessRequest) returns (SearchAccessResponse);

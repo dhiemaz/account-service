@@ -18,7 +18,7 @@ func (p *AccountPresenter) UpdateAccountOutput(data model.Account, err error) (m
 }
 
 // GetAllData : account presenter function
-func (p *AccountPresenter) GetAllData(data []model.Account, paging paginate.PaginationData, err error) ([]model.Account, paginate.PaginationData, error) {
+func (p *AccountPresenter) GetAllData(data []*model.Account, paging paginate.PaginationData, err error) ([]*model.Account, paginate.PaginationData, error) {
 	return data, paging, err
 }
 

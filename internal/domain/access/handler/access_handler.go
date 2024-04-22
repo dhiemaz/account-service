@@ -37,7 +37,6 @@ func (h AccessHandler) SearchAccessData(ctx context.Context, request *access_svc
 	}
 
 	return &access_svc.SearchAccessResponse{
-		Meta: nil,
 		Data: datas,
 	}, nil
 }

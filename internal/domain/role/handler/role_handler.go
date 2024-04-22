@@ -37,7 +37,6 @@ func (h RoleHandler) SearchRole(ctx context.Context, request *role_svc.SearchRol
 	}
 
 	return &role_svc.SearchRoleResponse{
-		Meta: nil,
 		Data: datas,
 	}, nil
 }

@@ -10,6 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"golang.org/x/crypto/bcrypt"
+	"log"
 	"reflect"
 	"time"
 )
@@ -33,10 +35,53 @@ func (r *MongoAdapter) InsertAccount(data model.Account) (model.Account, error) 
 		return data, errors.New("username is already taken, please choose another one")
 	}
 
+	// validate office (if not exist in master data then return error).
+	// TODO : refactor this code
+	collection := r.mgo.Collection(constant.OfficeCollection)
+
+	for _, office := range data.Office {
+		filter := bson.D{{"branch_id", office.BranchId}, {"branch_name", office.BranchName}}
+		err := collection.FindOne(context.TODO(), filter).Err()
+		if err != nil {
+			if errors.Is(err, mongo.ErrNoDocuments) {
+				return data, errors.New("invalid branch_id or branch_name")
+			}
+		}
+	}
+
+	// validate role (if not exist in master data then return error).
+	// TODO : refactor this code
+	collection = r.mgo.Collection(constant.RoleCollection)
+
+	for _, role := range data.Role {
+		filter := bson.D{{"role_id", role.RoleId}, {"role_name", role.RoleName}}
+		err := collection.FindOne(context.TODO(), filter).Err()
+		if err != nil {
+			if errors.Is(err, mongo.ErrNoDocuments) {
+				return data, errors.New("invalid role_id or role_name")
+			}
+		}
+	}
+
+	// validate access (if not exist in master data then return error).
+	// TODO : refactor this code
+	collection = r.mgo.Collection(constant.AccessCollection)
+
+	for _, access := range data.Access {
+		filter := bson.D{{"access_id", access.AccessId}, {"access_name", access.AccessName}}
+		err := collection.FindOne(context.TODO(), filter).Err()
+		if err != nil {
+			if errors.Is(err, mongo.ErrNoDocuments) {
+				return data, errors.New("invalid access_id or access_name")
+			}
+		}
+	}
+
 	t := time.Now().Unix()
 	data.RegisterDate = primitive.DateTime(t)
+	data.Password = hashAndSalt([]byte(data.Password))
 
-	collection := r.mgo.Collection(constant.AccountCollection)
+	collection = r.mgo.Collection(constant.AccountCollection)
 
 	data.Id = primitive.NewObjectID().Hex()
 	if _, err := collection.InsertOne(context.TODO(), data); err != nil {
@@ -54,7 +99,49 @@ func (r *MongoAdapter) UpdateAccount(data model.Account) (model.Account, error) 
 		return data, errors.New("username is not found")
 	}
 
-	collection := r.mgo.Collection(constant.AccountCollection)
+	// validate office (if not exist in master data then return error).
+	// TODO : refactor this code
+	collection := r.mgo.Collection(constant.OfficeCollection)
+
+	for _, office := range data.Office {
+		filter := bson.D{{"branch_id", office.BranchId}, {"branch_name", office.BranchName}}
+		err := collection.FindOne(context.TODO(), filter).Err()
+		if err != nil {
+			if errors.Is(err, mongo.ErrNoDocuments) {
+				return data, errors.New("invalid branch_id or branch_name")
+			}
+		}
+	}
+
+	// validate role (if not exist in master data then return error).
+	// TODO : refactor this code
+	collection = r.mgo.Collection(constant.RoleCollection)
+
+	for _, role := range data.Role {
+		filter := bson.D{{"role_id", role.RoleId}, {"role_name", role.RoleName}}
+		err := collection.FindOne(context.TODO(), filter).Err()
+		if err != nil {
+			if errors.Is(err, mongo.ErrNoDocuments) {
+				return data, errors.New("invalid role_id or role_name")
+			}
+		}
+	}
+
+	// validate access (if not exist in master data then return error).
+	// TODO : refactor this code
+	collection = r.mgo.Collection(constant.AccessCollection)
+
+	for _, access := range data.Access {
+		filter := bson.D{{"access_id", access.AccessId}, {"access_name", access.AccessName}}
+		err := collection.FindOne(context.TODO(), filter).Err()
+		if err != nil {
+			if errors.Is(err, mongo.ErrNoDocuments) {
+				return data, errors.New("invalid access_id or access_name")
+			}
+		}
+	}
+
+	collection = r.mgo.Collection(constant.AccountCollection)
 
 	updates := bson.D{}
 
@@ -113,8 +200,8 @@ func (r *MongoAdapter) FindOneAccountByUsername(username string) (model.Account,
 }
 
 // GetAllAccounts from database
-func (r *MongoAdapter) GetAllAccounts(page, limit int) ([]model.Account, paginate.PaginationData, error) {
-	var datas []model.Account
+func (r *MongoAdapter) GetAllAccounts(page, limit int) ([]*model.Account, paginate.PaginationData, error) {
+	var datas []*model.Account
 
 	collection := r.mgo.Collection(constant.AccountCollection)
 
@@ -142,4 +229,19 @@ func isZeroType(value reflect.Value) bool {
 	default:
 		return reflect.DeepEqual(zero, value.Interface())
 	}
+}
+
+func hashAndSalt(pwd []byte) string {
+
+	// Use GenerateFromPassword to hash & salt pwd.
+	// MinCost is just an integer constant provided by the bcrypt
+	// package along with DefaultCost & MaxCost.
+	// The cost can be any value you want provided it isn't lower
+	// than the MinCost (4)
+	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return string(hash)
 }
