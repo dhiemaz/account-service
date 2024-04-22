@@ -90,5 +90,8 @@ For binary deployment, you can use `rsync` command or `sftp` binary file to inst
 * Unit test
 * Containerize (untested)
 
+### Known Issue ###
+* Duplicate role, access, office in AccountSearch endpoint
+
 
 
