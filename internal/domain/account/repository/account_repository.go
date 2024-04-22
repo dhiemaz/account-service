@@ -10,5 +10,5 @@ type Repository interface {
 	InsertAccount(data model.Account) (model.Account, error)
 	UpdateAccount(data model.Account) (model.Account, error)
 	FindOneAccountByUsername(username string) (model.Account, error)
-	GetAllAccounts(page, limit int) ([]model.Account, paginate.PaginationData, error)
+	GetAllAccounts(searchFilter string, page, limit int) ([]model.Account, paginate.PaginationData, error)
 }

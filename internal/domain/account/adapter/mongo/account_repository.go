@@ -10,9 +10,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"reflect"
+	"strings"
 	"time"
 )
 
@@ -82,6 +84,43 @@ func (r *MongoAdapter) InsertAccount(data model.Account) (model.Account, error) 
 	data.Password = hashAndSalt([]byte(data.Password))
 
 	collection = r.mgo.Collection(constant.AccountCollection)
+
+	keys := bson.D{}
+
+	typeData := reflect.TypeOf(data)
+	values := reflect.ValueOf(data)
+
+	// starting from index 1 to exclude the ID field
+	for i := 1; i < typeData.NumField(); i++ {
+		field := typeData.Field(i)   // get the field from the struct definition
+		val := values.Field(i)       // get the value from the specified field position
+		tag := field.Tag.Get("json") // from the field, get the json struct tag
+
+		// we want to avoid zero values, as the omitted fields from model.Account
+		// corresponds to their zero values, and we only want provided fields
+		if !isZeroType(val) {
+			var key bson.E
+			if strings.Contains(tag, "id") {
+				key = bson.E{Key: tag, Value: 1}
+			} else {
+				key = bson.E{Key: tag, Value: "text"}
+			}
+			keys = append(keys, key)
+		}
+	}
+
+	// Create index (if not already created)
+	_, err := collection.Indexes().CreateOne(
+		context.TODO(),
+		mongo.IndexModel{
+			Keys:    keys,                                       // Index key(s)
+			Options: options.Index().SetName("f_account_index"), // Index options
+		},
+	)
+
+	if err != nil {
+		return data, err
+	}
 
 	data.Id = primitive.NewObjectID().Hex()
 	if _, err := collection.InsertOne(context.TODO(), data); err != nil {
@@ -157,7 +196,7 @@ func (r *MongoAdapter) UpdateAccount(data model.Account) (model.Account, error) 
 		val := values.Field(i)       // get the value from the specified field position
 		tag := field.Tag.Get("json") // from the field, get the json struct tag
 
-		// we want to avoid zero values, as the omitted fields from newBook
+		// we want to avoid zero values, as the omitted fields from model.Account
 		// corresponds to their zero values, and we only want provided fields
 		if !isZeroType(val) {
 			update := bson.E{Key: tag, Value: val.Interface()}
@@ -200,10 +239,14 @@ func (r *MongoAdapter) FindOneAccountByUsername(username string) (model.Account,
 }
 
 // GetAllAccounts from database
-func (r *MongoAdapter) GetAllAccounts(page, limit int) ([]model.Account, PaginationData, error) {
+func (r *MongoAdapter) GetAllAccounts(searchFilter string, page, limit int) ([]model.Account, PaginationData, error) {
 	collection := r.mgo.Collection(constant.AccountCollection)
+	filter := bson.D{}
 
-	filter := bson.M{}
+	if searchFilter != "" {
+		filter = append(filter, bson.E{Key: "$text", Value: bson.M{"$search": searchFilter}})
+	}
+
 	convertedLimitInt := int64(limit)
 	convertedPageInt := int64(page)
 

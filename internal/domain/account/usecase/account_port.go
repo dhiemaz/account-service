@@ -9,7 +9,7 @@ import (
 type Input interface {
 	CreateNewAccount(data model.Account) (model.Account, error)
 	UpdateAccount(data model.Account) (model.Account, error)
-	GetAllData(page, limit int) ([]model.Account, paginate.PaginationData, error)
+	GetAllData(searchFilter string, page, limit int) ([]model.Account, paginate.PaginationData, error)
 	FindAccountByUsername(username string) (model.Account, error)
 }
 

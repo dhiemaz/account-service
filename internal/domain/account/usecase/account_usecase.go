@@ -43,8 +43,8 @@ func (i AccountUsecase) UpdateAccount(data model.Account) (model.Account, error)
 }
 
 // GetAllData use case
-func (i AccountUsecase) GetAllData(page, limit int) ([]model.Account, paginate.PaginationData, error) {
-	result, pagination, err := i.accountRepository.GetAllAccounts(page, limit)
+func (i AccountUsecase) GetAllData(searchFilter string, page, limit int) ([]model.Account, paginate.PaginationData, error) {
+	result, pagination, err := i.accountRepository.GetAllAccounts(searchFilter, page, limit)
 	if err != nil {
 		logger.WithFields(logger.Fields{"component": "usecase", "action": "GetAllAccounts"}).
 			Errorf("failed get all accounts data, error : %v", err)

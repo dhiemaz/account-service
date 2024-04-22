@@ -234,7 +234,7 @@ func (h AccountHandler) AccountUpdate(ctx context.Context, in *account_svc.Accou
 }
 
 func (h AccountHandler) AccountSearch(ctx context.Context, in *account_svc.AccountSearchRequest) (*account_svc.AccountSearchResponse, error) {
-	results, pagination, err := h.accountUseCase.GetAllData(int(in.Pagination.Page), int(in.Pagination.Limit))
+	results, pagination, err := h.accountUseCase.GetAllData(in.SearchFilter.Value, int(in.Pagination.Page), int(in.Pagination.Limit))
 	if err != nil {
 		if e, ok := status.FromError(err); ok {
 			return nil, status.Errorf(e.Code(), e.Message())

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"github.com/dhiemaz/AccountService/cmd/grpc"
 	"github.com/dhiemaz/AccountService/cmd/migration"
@@ -46,6 +47,12 @@ func (c Command) Run() {
 			},
 			PostRun: func(cmd *cobra.Command, args []string) {
 				// close database connection
+				err := database.GetMongoConnection().Client().Disconnect(context.Background())
+				if err != nil {
+					logger.WithFields(logger.Fields{"component": "command", "action": "migrate-down"}).
+						Errorf("failed disconnect mongo, error: %v", err)
+				}
+
 				logger.WithFields(logger.Fields{"component": "command", "action": "serve gRPC service"}).
 					Infof("post-run command done")
 			},
@@ -63,6 +70,12 @@ func (c Command) Run() {
 			},
 			PostRun: func(cmd *cobra.Command, args []string) {
 				// close database connection
+				err := database.GetMongoConnection().Client().Disconnect(context.Background())
+				if err != nil {
+					logger.WithFields(logger.Fields{"component": "command", "action": "migrate-down"}).
+						Errorf("failed disconnect mongo, error: %v", err)
+				}
+
 				logger.WithFields(logger.Fields{"component": "command", "action": "migrate-up"}).
 					Infof("migration up process completed")
 			},
@@ -80,6 +93,13 @@ func (c Command) Run() {
 			},
 			PostRun: func(cmd *cobra.Command, args []string) {
 				// close database connection
+
+				err := database.GetMongoConnection().Client().Disconnect(context.Background())
+				if err != nil {
+					logger.WithFields(logger.Fields{"component": "command", "action": "migrate-down"}).
+						Errorf("failed disconnect mongo, error: %v", err)
+				}
+
 				logger.WithFields(logger.Fields{"component": "command", "action": "migrate-down"}).
 					Infof("migration down process completed")
 			},

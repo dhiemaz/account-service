@@ -28,7 +28,7 @@ func MongoMustConnect(cfg *config.Config) {
 		logger.WithFields(logger.Fields{"component": "database", "action": "MongoMustConnect"}).
 			Errorf("failed connect to mongodb, error: %v", err)
 
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	mgoDB = conn

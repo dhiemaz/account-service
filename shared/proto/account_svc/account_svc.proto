@@ -54,8 +54,13 @@ message AccountUpdateResponse {
 }
 
 // --------------------------------- AccountSearch Request and Response ---------------------- //
+message SearchFilter {
+  string value = 1;
+}
+
 message AccountSearchRequest {
   account_svc.pagination_request pagination = 1;
+  account_svc.SearchFilter search_filter = 2;
 }
 
 message AccountSearchResponse {
