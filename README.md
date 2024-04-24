@@ -18,7 +18,7 @@ Please refer to golang [installation](https://golang.org/doc/install) on how to 
 * Configuration
 
 Before application can be started, you must set configuration using `.env` file which the sample file can
-be found in the roor folder.
+be found in the root folder.
 
 below is example configuration, change value inside curly braces to match with configuration in server.
 ```
@@ -33,7 +33,7 @@ MONGO_USERNAME={MongoDB database username}
 MONGO_PASSWORD={MongoDB database password}
 ```
 
-e : _please fill configuration values with the correct one or match with your system._
+note : _please fill configuration values with the correct one or match with your system._
 
 * Dependencies
 
@@ -89,9 +89,6 @@ For binary deployment, you can use `rsync` command or `sftp` binary file to inst
 
 * Unit test
 * Containerize (untested)
-
-### Known Issue ###
-* Duplicate role, access, office in AccountSearch endpoint
 
 
 

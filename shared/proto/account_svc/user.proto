@@ -4,10 +4,8 @@ package account_svc;
 
 option go_package = ".;account_svc";
 
-import "validator.proto";
-
 message user_data {
-  string fullname = 1 [(validator.field) = {string_not_empty : true}];
+  string fullname = 1;
   string address = 2;
   string zipcode = 3;
   string province = 4;
